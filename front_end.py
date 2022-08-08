@@ -2,10 +2,9 @@ import tkinter as tk
 from tkinter import *
 from tkinter import ttk
 from tkinter import filedialog as fd
-from tkinter.messagebox import showinfo
+from tkinter import messagebox
 import datetime
 from survey_log import SurveyLog
-import pdb
 
 # create the root window
 root = tk.Tk()
@@ -20,13 +19,24 @@ def select_dir():
         initialdir='/')
     transfer_drive_path_value.set(dir_path)
 def build_log():
-    log = SurveyLog(transfer_drive_path_value.get(), sheet_number_value.get(), selected_day_number.get(), vessel_value.get())
-    log.build_log()
-    showinfo(
-        title='Selected directory',
-        message="Built Log"
-    )
-
+    try:
+        log = SurveyLog(transfer_drive_path_value.get(), sheet_number_value.get(), selected_day_number.get(), vessel_value.get())
+        log.build_log()
+        messagebox.showinfo(
+            title='Auto-logger',
+            message="Survey log generated successfully"
+        )
+    except FileNotFoundError as e:
+        messagebox.showerror(
+            title=f'Log generation error: File expected at directory not found',
+            message=str(e)
+        )
+    except Exception as e:
+        messagebox.showerror(
+            title=f'Unknown error',
+            message=str(e)
+        )
+        raise e
 def log_legal():
     return (len(sheet_number_value.get()) > 0 and
         len(vessel_value.get()) > 0 and
