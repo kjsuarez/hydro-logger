@@ -9,13 +9,10 @@ from openpyxl import load_workbook
 from pathlib import Path
 import math
 import pdb
-# pdb.set_trace()
 
 class SurveyLog:
 
-    # path = "C:\Users\super\Documents\survey project\OPR-W386-TJ-22"
     # x = SurveyLog("C:/Users/super/Documents/survey_project/OPR-W386-TJ-22", "H13609", "179", "2903")
-
     def __init__(self, drive_path, sheet_number, day_number, vessel):
         self.drive_path = drive_path
         self.sheet_number = sheet_number
