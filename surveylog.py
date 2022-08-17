@@ -17,6 +17,7 @@ class SurveyLog:
         self.drive_path = drive_path
         self.sheet_number = sheet_number
         self.day_number = day_number
+        self.sanitize_dn()
         self.vessel = vessel
         self.project_name = drive_path.split('/')[-1]
 
@@ -48,6 +49,11 @@ class SurveyLog:
         self.svp_path = f"{self.drive_path}/{self.sheet_number}/Data/SVP/{self.vessel_year_sonar}/SVP/{self.year_day}"
         self.mbes_path = f"{self.drive_path}/{self.sheet_number}/Data/MBES/{self.vessel_year_sonar}/{self.year_day}"
 
+    def sanitize_dn(self):
+        day_number = str(self.day_number)
+        off_by = 3 - len(day_number)
+        zeros = "0" * off_by
+        self.day_number = zeros + day_number
 
     def set_pos_filenames(self):
         position_nodes = listdir(self.pos_path)
