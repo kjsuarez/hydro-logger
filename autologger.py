@@ -81,12 +81,10 @@ if saved_path != None:
 
 # day number
 ttk.Label(root, text="day number").grid(column=0, row=1)
-day_number_options = range(1,365)
 todays_day_of_year = datetime.date.today().timetuple().tm_yday
-selected_day_number.set(day_number_options[todays_day_of_year - 1])
-# localStorage.setItem("day_number", day_number_options[todays_day_of_year - 1])
-w = OptionMenu(root, selected_day_number, *day_number_options)
-w.grid(column=1, row=1, sticky='w')
+selected_day_number.set(todays_day_of_year)
+day_number_text = ttk.Entry(root, textvariable=selected_day_number)
+day_number_text.grid(column=1, row=1, sticky='w')
 selected_day_number.trace('w', entry_callback)
 
 # sheet number
