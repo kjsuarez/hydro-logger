@@ -14,4 +14,4 @@ While inside the working directory, execute the following:
 $ pip install -U pyinstaller
 $ pyinstaller autologger.spec
 ```
-The usable executable should be generated at `./dist/autologger/autologger.exe`
+The usable executable should be generated at `./dist/autologger.exe`

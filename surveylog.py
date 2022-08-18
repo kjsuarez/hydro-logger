@@ -25,7 +25,8 @@ class SurveyLog:
         today = datetime.date.today()
         self.current_year = today.year
         self.date_string = f"{today.month}/{today.day}/{today.year}"
-        self.base_log_workbook = load_workbook(filename = f'HXXXXX_VesselXXXX_DNXXX_Log_{self.current_year}.xlsm', keep_vba = True)
+        base_excel_path = path.abspath(path.join(path.dirname(__file__), f'HXXXXX_VesselXXXX_DNXXX_Log_{self.current_year}.xlsm'))
+        self.base_log_workbook = load_workbook(filename = base_excel_path, keep_vba = True)
         self.base_log_sheet = self.base_log_workbook.active
         self.date_cell = 'B9'
         self.project_cell = 'F9'
