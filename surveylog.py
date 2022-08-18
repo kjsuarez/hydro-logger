@@ -75,8 +75,11 @@ class SurveyLog:
         mbes_pattern = re.compile('^(XL_)*\d{4}_\d+_\d+_2903_EM2040\.all$')
         self.mbes_filenames = [s for s in mbes_nodes if mbes_pattern.match(s)]
         sorted(self.mbes_filenames, key=lambda filename: filename.replace("XL_", ""))
-        self.first_mbes_line = self.mbes_filenames[0].replace("XL_", "").split("_")[0]
-        self.last_mbes_line = self.mbes_filenames[-1].replace("XL_", "").split("_")[0]
+        self.first_mbes_line = ""
+        self.last_mbes_line = ""
+        if len(self.mbes_filenames) < 0:
+            self.first_mbes_line = self.mbes_filenames[0].replace("XL_", "").split("_")[0]
+            self.last_mbes_line = self.mbes_filenames[-1].replace("XL_", "").split("_")[0]
         return [self.first_mbes_line, self.last_mbes_line]
 
     def test(self):
@@ -93,8 +96,14 @@ class SurveyLog:
 
         # POS files
         self.set_pos_filenames()
-        self.base_log_sheet[self.first_pos_cell] = self.pos_filenames[0]
-        self.base_log_sheet[self.last_pos_cell] = self.pos_filenames[-1]
+        try:
+            self.base_log_sheet[self.first_pos_cell] = self.pos_filenames[0]
+        except IndexError:
+            self.base_log_sheet[self.first_pos_cell] = ""
+        try:
+            self.base_log_sheet[self.last_pos_cell] = self.pos_filenames[-1]
+        except IndexError:
+            self.base_log_sheet[self.last_pos_cell] = ""
 
         # SVP files
         self.set_svp_filenames()
