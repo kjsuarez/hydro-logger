@@ -77,7 +77,7 @@ class SurveyLog:
         sorted(self.mbes_filenames, key=lambda filename: filename.replace("XL_", ""))
         self.first_mbes_line = ""
         self.last_mbes_line = ""
-        if len(self.mbes_filenames) < 0:
+        if len(self.mbes_filenames) > 0:
             self.first_mbes_line = self.mbes_filenames[0].replace("XL_", "").split("_")[0]
             self.last_mbes_line = self.mbes_filenames[-1].replace("XL_", "").split("_")[0]
         return [self.first_mbes_line, self.last_mbes_line]
