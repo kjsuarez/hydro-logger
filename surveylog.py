@@ -25,9 +25,7 @@ class SurveyLog:
         today = datetime.date.today()
         self.current_year = today.year
         self.date_string = f"{today.month}/{today.day}/{today.year}"
-        base_excel_path = path.abspath(path.join(path.dirname(__file__), f'HXXXXX_VesselXXXX_DNXXX_Log_{self.current_year}.xlsm'))
-        self.base_log_workbook = load_workbook(filename = base_excel_path, keep_vba = True)
-        self.base_log_sheet = self.base_log_workbook.active
+
         self.date_cell = 'B9'
         self.project_cell = 'F9'
         self.sheet_cell = 'J9'
@@ -49,6 +47,15 @@ class SurveyLog:
         self.log_path = f"{self.drive_path}/{self.sheet_number}/Data/Acquisition_Logs/{self.vessel_year_sonar}/{self.year_day}"
         self.svp_path = f"{self.drive_path}/{self.sheet_number}/Data/SVP/{self.vessel_year_sonar}/SVP/{self.year_day}"
         self.mbes_path = f"{self.drive_path}/{self.sheet_number}/Data/MBES/{self.vessel_year_sonar}/{self.year_day}"
+
+        base_excel_path = path.abspath(path.join(path.dirname(__file__), f'HXXXXX_VesselXXXX_DNXXX_Log_{self.current_year}.xlsm'))
+        existing_excel_path = path.abspath(f"{self.log_path}/{self.sheet_number}_Vessel{self.vessel}_DN{self.day_number}_Log_{self.current_year}.xlsm")
+        if path.isfile(existing_excel_path):
+            workbook_to_use = existing_excel_path
+        else:
+            workbook_to_use = base_excel_path
+        self.base_log_workbook = load_workbook(filename = workbook_to_use, keep_vba = True)
+        self.base_log_sheet = self.base_log_workbook.active
 
     def sanitize_dn(self):
         day_number = str(self.day_number)
