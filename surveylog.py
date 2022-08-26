@@ -13,17 +13,20 @@ import pdb
 class SurveyLog:
 
     # x = SurveyLog("C:/Users/super/Documents/survey_project/OPR-W386-TJ-22", "H13609", "179", "2903")
-    def __init__(self, drive_path, sheet_number, day_number, vessel):
+    def __init__(self, drive_path, sheet_number, day_number, vessel, year=datetime.date.today().year):
         self.drive_path = drive_path
         self.sheet_number = sheet_number
         self.day_number = day_number
         self.sanitize_dn()
+        self.year = year
+        self.date_from_day_number = datetime.datetime.strptime(f'{year}-{day_number}','%Y-%j')
+        self.date_month = self.date_from_day_number.month
+        self.date_day = self.date_from_day_number.day
         self.vessel = vessel
         self.project_name = drive_path.split('/')[-1]
 
         # excel stuff
         today = datetime.date.today()
-        self.current_year = today.year
         self.date_string = f"{today.month}/{today.day}/{today.year}"
 
         self.date_cell = 'B9'
@@ -41,15 +44,15 @@ class SurveyLog:
         self.first_mbes_cell = 'B33'; self.last_mbes_cell = 'B34'
 
         # filepath stuff
-        self.year_day = f"{self.current_year}-{self.day_number}"
-        self.vessel_year_sonar = f"{self.vessel}_{self.current_year}_EM2040"
+        self.year_day = f"{self.year}-{self.day_number}"
+        self.vessel_year_sonar = f"{self.vessel}_{self.year}_EM2040"
         self.pos_path = f"{self.drive_path}/{self.sheet_number}/Data/Positioning/{self.vessel_year_sonar}/{self.year_day}" #drive_path+"/position"
         self.log_path = f"{self.drive_path}/{self.sheet_number}/Data/Acquisition_Logs/{self.vessel_year_sonar}/{self.year_day}"
         self.svp_path = f"{self.drive_path}/{self.sheet_number}/Data/SVP/{self.vessel_year_sonar}/SVP/{self.year_day}"
         self.mbes_path = f"{self.drive_path}/{self.sheet_number}/Data/MBES/{self.vessel_year_sonar}/{self.year_day}"
 
-        base_excel_path = path.abspath(path.join(path.dirname(__file__), f'HXXXXX_VesselXXXX_DNXXX_Log_{self.current_year}.xlsm'))
-        existing_excel_path = path.abspath(f"{self.log_path}/{self.sheet_number}_Vessel{self.vessel}_DN{self.day_number}_Log_{self.current_year}.xlsm")
+        base_excel_path = path.abspath(path.join(path.dirname(__file__), f'HXXXXX_VesselXXXX_DNXXX_Log_{self.year}.xlsm'))
+        existing_excel_path = path.abspath(f"{self.log_path}/{self.sheet_number}_Vessel{self.vessel}_DN{self.day_number}_Log_{self.year}.xlsm")
         if path.isfile(existing_excel_path):
             workbook_to_use = existing_excel_path
         else:
@@ -72,7 +75,7 @@ class SurveyLog:
 
     def set_svp_filenames(self):
         svp_nodes = listdir(self.svp_path)
-        svp_pattern = re.compile(f'{self.current_year}_{self.day_number}_\d+\.svp')
+        svp_pattern = re.compile(f'^(mvp_{self.year}-0*{self.date_month}-0*{self.date_day}_\d+\.svp)|({self.year}_{self.day_number}_\d+\.svp)$')
         self.svp_filenames = [s for s in svp_nodes if svp_pattern.match(s)]
         self.svp_filenames.sort()
         return self.svp_filenames
@@ -130,6 +133,6 @@ class SurveyLog:
         self.base_log_sheet[self.first_mbes_cell] = self.first_mbes_line
         self.base_log_sheet[self.last_mbes_cell] = self.last_mbes_line
 
-        self.base_log_workbook.save(filename = f"{self.log_path}/{self.sheet_number}_Vessel{self.vessel}_DN{self.day_number}_Log_{self.current_year}.xlsm")
+        self.base_log_workbook.save(filename = f"{self.log_path}/{self.sheet_number}_Vessel{self.vessel}_DN{self.day_number}_Log_{self.year}.xlsm")
 
 # x = SurveyLog("C:/Users/super/Documents/survey_project/OPR-W386-TJ-22", "H13609", "179", "2903")
